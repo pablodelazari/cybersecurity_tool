@@ -1,2 +1,6 @@
-requests==2.31.0
-beautifulsoup4==4.12.2
+requests>=2.25.1
+beautifulsoup4>=4.9.3
+cryptography>=3.4.7
+python-nmap>=0.7.1
+paramiko>=2.7.2
+dnspython>=2.1.0
