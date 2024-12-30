@@ -43,4 +43,4 @@ O **Cybersecurity Tool** é uma aplicação desenvolvida em Python que permite a
 ### **PT-BR:**
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/SEU_USUARIO/cybersecurity_tool.git
+   git clone https://github.com/pablodelazari/cybersecurity_tool.git
