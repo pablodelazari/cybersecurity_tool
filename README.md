@@ -18,6 +18,12 @@ SecuriTool is a modular cybersecurity analysis platform built with **Python/Flas
 
 > ⚠️ **Disclaimer:** Use this tool only on systems you own or have explicit authorization to test. Unauthorized scanning may violate laws in your jurisdiction.
 
+### 🖥️ Scan Results Preview
+
+<div align="center">
+<img src="static/img/results.png" alt="SecuriTool Scan Results" width="800"/>
+</div>
+
 ---
 
 ## ⚙️ Features
