@@ -35,7 +35,7 @@ SecuriTool is a modular cybersecurity analysis platform built with **Python/Flas
 | 🔒 **SSL/TLS Analysis** | Certificate and cipher inspection | Cert validity, expiry, TLS version, cipher strength, chain verification |
 | 🌐 **DNS Enumeration** | Record queries and subdomain discovery | A, AAAA, MX, NS, TXT, CNAME, SOA records + 80 common subdomains |
 | 🔧 **Tech Detection** | Server and framework fingerprinting | CMS detection, cookie security flags, version disclosure |
-| ⚠️ **Vuln Scanner** | OWASP Top 10 misconfiguration checks | Clickjacking, MIME sniffing, mixed content, open redirects, HTTPS enforcement |
+| ⚠️ **Vuln Scanner** | OWASP Top 10:2025 vulnerability checks | Supply chain failures (A03), CORS, SRI, HSTS, CSP, error handling (A10), security.txt |
 
 ---
 
@@ -98,8 +98,8 @@ securi tool/
 
 This tool implements checks aligned with:
 
+- [OWASP Top 10:2025](https://owasp.org/Top10/2025/) — Latest edition
 - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
-- [OWASP Top 10 (2021)](https://owasp.org/www-project-top-ten/)
 - [Mozilla Observatory](https://observatory.mozilla.org/)
 - [SSL Labs Grading](https://www.ssllabs.com/ssltest/)
 
