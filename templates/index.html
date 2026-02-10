@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecuriTool — Cybersecurity Analysis Platform</title>
+    <meta name="description" content="Professional cybersecurity analysis platform for security headers, SSL/TLS, port scanning, DNS enumeration, technology fingerprinting, and vulnerability detection.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <path d="M20 2L36 10V22C36 30.8366 28.8366 38 20 38C11.1634 38 4 30.8366 4 22V10L20 2Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M20 8L30 13V22C30 27.5228 25.5228 32 20 32C14.4772 32 10 27.5228 10 22V13L20 8Z" fill="currentColor" opacity="0.2"/>
+                        <path d="M16 20L19 23L25 17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>SecuriTool</h1>
+                    <span class="logo-subtitle">Cybersecurity Analysis Platform</span>
+                </div>
+            </div>
+            <div class="header-links">
+                <a href="https://github.com/pablodelazari/cybersecurity_tool" target="_blank" class="header-link" id="github-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Target Input Section -->
+        <section class="target-section" id="target-section">
+            <div class="target-card glass-card">
+                <div class="target-header">
+                    <h2>🎯 Target Analysis</h2>
+                    <p class="target-description">Enter a domain or IP to start the security assessment</p>
+                </div>
+                <div class="target-input-group">
+                    <div class="input-wrapper">
+                        <span class="input-prefix">https://</span>
+                        <input type="text" 
+                               id="target-input" 
+                               placeholder="example.com" 
+                               autocomplete="off"
+                               spellcheck="false">
+                    </div>
+                    <button id="scan-btn" class="btn-primary" onclick="startScan()">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span>Launch Scan</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module Selection -->
+        <section class="modules-section" id="modules-section">
+            <h3 class="section-title">Select Scan Modules</h3>
+            <div class="modules-grid">
+                <label class="module-card glass-card" for="mod-ports">
+                    <input type="checkbox" id="mod-ports" value="ports" checked>
+                    <div class="module-icon">🔌</div>
+                    <div class="module-info">
+                        <span class="module-name">Port Scanner</span>
+                        <span class="module-desc">TCP connect scan with banner grabbing</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+                <label class="module-card glass-card" for="mod-headers">
+                    <input type="checkbox" id="mod-headers" value="headers" checked>
+                    <div class="module-icon">🛡️</div>
+                    <div class="module-info">
+                        <span class="module-name">Security Headers</span>
+                        <span class="module-desc">OWASP header analysis & grading</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+                <label class="module-card glass-card" for="mod-ssl">
+                    <input type="checkbox" id="mod-ssl" value="ssl" checked>
+                    <div class="module-icon">🔒</div>
+                    <div class="module-info">
+                        <span class="module-name">SSL/TLS Analysis</span>
+                        <span class="module-desc">Certificate, cipher & protocol checks</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+                <label class="module-card glass-card" for="mod-dns">
+                    <input type="checkbox" id="mod-dns" value="dns" checked>
+                    <div class="module-icon">🌐</div>
+                    <div class="module-info">
+                        <span class="module-name">DNS Enumeration</span>
+                        <span class="module-desc">Records, subdomains & DNSSEC</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+                <label class="module-card glass-card" for="mod-tech">
+                    <input type="checkbox" id="mod-tech" value="tech" checked>
+                    <div class="module-icon">🔧</div>
+                    <div class="module-info">
+                        <span class="module-name">Tech Detection</span>
+                        <span class="module-desc">Server, frameworks & cookie analysis</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+                <label class="module-card glass-card" for="mod-vulns">
+                    <input type="checkbox" id="mod-vulns" value="vulns" checked>
+                    <div class="module-icon">⚠️</div>
+                    <div class="module-info">
+                        <span class="module-name">Vuln Scanner</span>
+                        <span class="module-desc">OWASP Top 10 misconfiguration checks</span>
+                    </div>
+                    <div class="module-check">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                </label>
+            </div>
+        </section>
+
+        <!-- Progress Section (hidden until scan starts) -->
+        <section class="progress-section hidden" id="progress-section">
+            <div class="progress-card glass-card">
+                <div class="progress-header">
+                    <div class="progress-title">
+                        <div class="pulse-dot"></div>
+                        <span id="progress-status">Initializing scan...</span>
+                    </div>
+                    <span class="progress-pct" id="progress-pct">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="progress-modules" id="progress-modules"></div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section hidden" id="results-section">
+            <div class="results-header">
+                <h2>📊 Scan Results</h2>
+                <div class="results-meta">
+                    <span id="result-target" class="result-target"></span>
+                    <span id="result-time" class="result-time"></span>
+                </div>
+            </div>
+            <div id="results-container" class="results-container"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>SecuriTool — Built by <a href="https://github.com/pablodelazari" target="_blank">Pablo de Lazari</a></p>
+            <p class="footer-disclaimer">⚠️ Use only on systems you have authorization to test.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
