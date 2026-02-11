@@ -36,6 +36,8 @@ SecuriTool is a modular cybersecurity analysis platform built with **Python/Flas
 | 🌐 **DNS Enumeration** | Record queries and subdomain discovery | A, AAAA, MX, NS, TXT, CNAME, SOA records + 80 common subdomains |
 | 🔧 **Tech Detection** | Server and framework fingerprinting | CMS detection, cookie security flags, version disclosure |
 | ⚠️ **Vuln Scanner** | OWASP Top 10:2025 vulnerability checks | Supply chain failures (A03), CORS, SRI, HSTS, CSP, error handling (A10), security.txt |
+| 🔍 **Recon / File Discovery** | Sensitive file & directory enumeration | 90+ paths: .env, .git, backups, admin panels, debug endpoints, API docs |
+| 🛡️ **WAF Detection** | Firewall & CDN fingerprinting | 20+ products: Cloudflare, Akamai, AWS WAF, ModSecurity, Imperva + trigger testing |
 
 ---
 
@@ -76,7 +78,9 @@ securi tool/
 │   ├── ssl_scanner.py      # SSL/TLS certificate analysis
 │   ├── dns_scanner.py      # DNS enumeration + subdomain discovery
 │   ├── tech_detector.py    # Technology fingerprinting
-│   └── vuln_scanner.py     # OWASP vulnerability checks
+│   ├── vuln_scanner.py     # OWASP 2025 vulnerability checks
+│   ├── recon_scanner.py    # Sensitive file & directory discovery
+│   └── waf_detector.py     # WAF/CDN fingerprinting
 ├── templates/
 │   └── index.html          # Dashboard UI
 └── static/

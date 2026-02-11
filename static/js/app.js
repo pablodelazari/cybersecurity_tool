@@ -80,7 +80,9 @@ async function startScan() {
         ssl: 'SSL/TLS',
         dns: 'DNS Enum',
         tech: 'Tech Detection',
-        vulns: 'Vuln Scanner'
+        vulns: 'Vuln Scanner',
+        recon: 'Recon / Files',
+        waf: 'WAF Detection'
     };
 
     const progressModules = document.getElementById('progress-modules');
@@ -185,7 +187,9 @@ function renderResults(scan) {
         ports: renderPortResults,
         dns: renderDNSResults,
         tech: renderTechResults,
-        vulns: renderVulnResults
+        vulns: renderVulnResults,
+        recon: renderReconResults,
+        waf: renderWAFResults
     };
 
     const moduleIcons = {
@@ -194,16 +198,20 @@ function renderResults(scan) {
         ssl: '🔒',
         dns: '🌐',
         tech: '🔧',
-        vulns: '⚠️'
+        vulns: '⚠️',
+        recon: '🔍',
+        waf: '🛡️'
     };
 
-    const moduleNames = {
+    const moduleNames2 = {
         ports: 'Port Scanner',
         headers: 'Security Headers',
         ssl: 'SSL/TLS Analysis',
         dns: 'DNS Enumeration',
         tech: 'Technology Detection',
-        vulns: 'Vulnerability Scanner'
+        vulns: 'Vulnerability Scanner',
+        recon: 'Recon / File Discovery',
+        waf: 'WAF Detection'
     };
 
     let delay = 0;
@@ -219,7 +227,7 @@ function renderResults(scan) {
             <div class="result-card-header" onclick="toggleCard(this)">
                 <div class="result-card-title">
                     <span class="icon">${moduleIcons[key] || '📋'}</span>
-                    <h3>${moduleNames[key] || key}</h3>
+                    <h3>${moduleNames2[key] || key}</h3>
                 </div>
                 <div style="display:flex;align-items:center;gap:12px;">
                     <span class="risk-badge ${riskClass}">${riskLevel}</span>
@@ -512,6 +520,180 @@ function renderVulnResults(body, data) {
         }
     } else {
         html += `<div class="section-label" style="color:var(--green)">✅ No vulnerabilities detected</div>`;
+    }
+
+    body.innerHTML = html;
+}
+
+function renderReconResults(body, data) {
+    let html = '';
+
+    // Summary stats
+    const foundCount = (data.found || []).length;
+    const forbiddenCount = (data.forbidden || []).length;
+    const infoCount = (data.info_files || []).length;
+
+    html += `
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value" style="color:var(--cyan)">${data.total_checked || 0}</div>
+                <div class="stat-label">Paths Checked</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:${foundCount > 0 ? 'var(--red)' : 'var(--green)'}">${foundCount}</div>
+                <div class="stat-label">Exposed Files</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:var(--amber)">${forbiddenCount}</div>
+                <div class="stat-label">Forbidden (403)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:var(--blue)">${infoCount}</div>
+                <div class="stat-label">Info Files</div>
+            </div>
+        </div>
+    `;
+
+    // Exposed files
+    if (data.found && data.found.length > 0) {
+        html += `<div class="section-label">⚠️ Exposed Sensitive Files (${data.found.length})</div>`;
+        html += '<table class="data-table"><thead><tr><th>Path</th><th>Category</th><th>Status</th><th>Severity</th></tr></thead><tbody>';
+        for (const f of data.found) {
+            html += `<tr>
+                <td style="color:var(--text-primary);font-weight:500;font-family:var(--font-mono)">${escapeHTML(f.path)}</td>
+                <td>${escapeHTML(f.category)}</td>
+                <td>${f.status}</td>
+                <td><span class="finding-severity">${f.severity}</span></td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+    }
+
+    // Forbidden files
+    if (data.forbidden && data.forbidden.length > 0) {
+        html += `<div class="section-label">🔒 Forbidden Paths (${data.forbidden.length})</div>`;
+        html += '<table class="data-table"><thead><tr><th>Path</th><th>Category</th><th>Note</th></tr></thead><tbody>';
+        for (const f of data.forbidden) {
+            html += `<tr>
+                <td style="color:var(--text-primary);font-family:var(--font-mono)">${escapeHTML(f.path)}</td>
+                <td>${escapeHTML(f.category)}</td>
+                <td>${escapeHTML(f.note || '')}</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+    }
+
+    // Info files  
+    if (data.info_files && data.info_files.length > 0) {
+        html += `<div class="section-label">ℹ️ Security Files Found</div>`;
+        for (const f of data.info_files) {
+            html += `<div class="finding severity-info">
+                <div class="finding-header">
+                    <span class="finding-title">${escapeHTML(f.path)}</span>
+                    <span class="finding-severity">info</span>
+                </div>
+                <div class="finding-detail">${escapeHTML(f.description)}</div>
+            </div>`;
+        }
+    }
+
+    // Robots.txt disallowed paths
+    if (data.robots_disallowed && data.robots_disallowed.length > 0) {
+        html += `<div class="section-label">🤖 Robots.txt Disallowed Paths</div>`;
+        html += '<div style="display:flex;flex-wrap:wrap;gap:4px;">';
+        for (const path of data.robots_disallowed) {
+            html += `<span class="tag">${escapeHTML(path)}</span>`;
+        }
+        html += '</div>';
+    }
+
+    // Issues
+    if (data.issues && data.issues.length > 0) {
+        html += `<div class="section-label">Findings</div>`;
+        html += renderFindings(data.issues);
+    }
+
+    if (foundCount === 0 && forbiddenCount === 0) {
+        html += `<div class="section-label" style="color:var(--green)">✅ No sensitive files exposed</div>`;
+    }
+
+    body.innerHTML = html;
+}
+
+function renderWAFResults(body, data) {
+    let html = '';
+
+    // WAF/CDN Detection Status
+    const wafProducts = data.waf_products || [];
+    const cdnProducts = data.cdn_products || [];
+
+    html += `
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value" style="color:${data.waf_detected ? 'var(--green)' : 'var(--amber)'}">${data.waf_detected ? 'YES' : 'NO'}</div>
+                <div class="stat-label">WAF Detected</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:${data.cdn_detected ? 'var(--green)' : 'var(--text-secondary)'}">${data.cdn_detected ? 'YES' : 'NO'}</div>
+                <div class="stat-label">CDN Detected</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:var(--cyan)">${wafProducts.length + cdnProducts.length}</div>
+                <div class="stat-label">Products Found</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" style="color:var(--blue)">${(data.protection_headers || []).length}</div>
+                <div class="stat-label">Protection Headers</div>
+            </div>
+        </div>
+    `;
+
+    // WAF Products
+    if (wafProducts.length > 0) {
+        html += `<div class="section-label">🛡️ WAF / Security Products</div>`;
+        for (const p of wafProducts) {
+            html += `<div class="finding severity-info">
+                <div class="finding-header">
+                    <span class="finding-title">${escapeHTML(p.name)}</span>
+                    <span class="finding-severity">${escapeHTML(p.type)}</span>
+                </div>
+                <div class="finding-detail">Evidence: ${escapeHTML(p.evidence)}</div>
+            </div>`;
+        }
+    }
+
+    // CDN Products
+    if (cdnProducts.length > 0) {
+        html += `<div class="section-label">🌐 CDN / Edge Services</div>`;
+        for (const p of cdnProducts) {
+            html += `<div class="finding severity-info">
+                <div class="finding-header">
+                    <span class="finding-title">${escapeHTML(p.name)}</span>
+                    <span class="finding-severity">CDN</span>
+                </div>
+                <div class="finding-detail">Evidence: ${escapeHTML(p.evidence)}</div>
+            </div>`;
+        }
+    }
+
+    // Protection Headers
+    if (data.protection_headers && data.protection_headers.length > 0) {
+        html += `<div class="section-label">🔐 Protection Headers</div>`;
+        html += '<table class="data-table"><thead><tr><th>Header</th><th>Value</th><th>Purpose</th></tr></thead><tbody>';
+        for (const h of data.protection_headers) {
+            html += `<tr>
+                <td style="color:var(--text-primary);font-weight:500">${escapeHTML(h.header)}</td>
+                <td style="font-family:var(--font-mono);font-size:0.75rem">${escapeHTML(h.value)}</td>
+                <td>${escapeHTML(h.description)}</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+    }
+
+    // Issues / Assessment
+    if (data.issues && data.issues.length > 0) {
+        html += `<div class="section-label">Assessment</div>`;
+        html += renderFindings(data.issues);
     }
 
     body.innerHTML = html;

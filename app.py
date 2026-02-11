@@ -7,7 +7,7 @@ import threading
 import time
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-from scanners import port_scanner, header_scanner, ssl_scanner, dns_scanner, tech_detector, vuln_scanner
+from scanners import port_scanner, header_scanner, ssl_scanner, dns_scanner, tech_detector, vuln_scanner, recon_scanner, waf_detector
 
 app = Flask(__name__)
 CORS(app)
@@ -23,6 +23,8 @@ MODULES = {
     "dns": {"name": "DNS Enumeration", "scanner": dns_scanner},
     "tech": {"name": "Technology Detection", "scanner": tech_detector},
     "vulns": {"name": "Vulnerability Scanner", "scanner": vuln_scanner},
+    "recon": {"name": "Recon / File Discovery", "scanner": recon_scanner},
+    "waf": {"name": "WAF Detection", "scanner": waf_detector},
 }
 
 
